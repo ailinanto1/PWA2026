@@ -12,9 +12,12 @@
 <body>
     <div id="app">
         <H3>INFORMACIÓN DE PERFIL SIMPLE</H3>
-        <p>
-            "Hola, mi nombre es {{ nombre }}, tengo {{ edad }} años y vivo en {{ ciudad }}"
-        </p>
+        <p>"Hola, mi nombre es {{ nombre }}, tengo {{ edad }} años y vivo en {{ ciudad }}"</p>
+        <br>
+        <h3>CONTADOR</h3>
+        <p>{{ contador }}</p>
+        <button @click="incrementar">INCREMENTAR</button>
+        <button @click="decrementar">DECREMENTAR</button>
     </div>
     <script>
         var app = new Vue({
@@ -22,7 +25,16 @@
             data: {
                 nombre: "Ana García",
                 edad: 30,
-                ciudad: "Tupungato"
+                ciudad: "Tupungato",
+                contador: 0
+            },
+            methods: {
+                incrementar() {
+                    this.contador++
+                },
+                decrementar() {
+                    this.contador--
+                }
             },
         })
     </script>
