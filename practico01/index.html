@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>TP1</title>
 </head>
-
 <body>
     <div id="app">
         <H3>INFORMACIÓN DE PERFIL SIMPLE</H3>
@@ -18,6 +17,21 @@
         <p>{{ contador }}</p>
         <button @click="incrementar">INCREMENTAR</button>
         <button @click="decrementar">DECREMENTAR</button>
+        <br>
+        <h3>LISTA DE TAREAS CON CONTEO Y ESTADO</h3>
+        <div v-for="tarea in tareas" :key="tarea.id">
+            <input type="checkbox" v-model="tarea.completada">
+            {{ tarea.texto }}
+        </div>
+        <input type="text" v-model="nuevaTarea" @keyup.enter="agregarTarea" placeholder="Escribí una tarea...">
+        <!--VER PORQUE NO ME FUNCIONA-->
+        <button @click="agregarTarea">AÑADIR TAREA</button>
+        <br>
+        <h3>TAREAS TOTALES</h3>
+        <p>Tenes un total de {{ totalTareas }} tareas</p>
+        <br>
+        <h3>TAREAS PENDIENTES</h3>
+        <p>Tenes {{ tareasPendientes }} tareas pendientes </p>
     </div>
     <script>
         var app = new Vue({
@@ -26,7 +40,16 @@
                 nombre: "Ana García",
                 edad: 30,
                 ciudad: "Tupungato",
-                contador: 0
+                contador: 0,
+                nuevaTarea: '',
+                tareas: [
+                    {id: 1, texto: 'Entregar el primer trabajo práctico', completada: false},
+                    {id: 2, texto: 'Aprender Django', completada: false},
+                    {id: 3, texto: 'Instalar Vuetify en el proyecto', completada: false},
+                    {id: 4, texto: 'Consumir API con axios', completada: false},
+                    {id: 5, texto: 'Configurar contenedor de Docker', completada: false},
+                    {id: 6, texto: 'Diseñar una base de datos', completada: false},
+                ]
             },
             methods: {
                 incrementar() {
@@ -34,8 +57,30 @@
                 },
                 decrementar() {
                     this.contador--
+                },
+                agregarTarea() {
+                    this.tareas.push({
+                        id: Date.now(),
+                        texto: this.nuevaTarea,
+                        completada: false
+                    })
+                    this.nuevaTarea = '';
                 }
             },
+            computed: {
+                tareasPendientes() {
+                    let total = 0
+                    for (let tarea of this.tareas) {
+                        if (tarea.completada === false) {
+                            total++
+                        }
+                    }
+                    return total
+                },
+                totalTareas(){
+                    return this.tareas.length
+                }
+            }
         })
     </script>
 </body>
