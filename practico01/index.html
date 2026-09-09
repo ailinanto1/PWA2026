@@ -1,11 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>TP1</title>
 </head>
+
 <body>
-    
+    <div id="app">
+        <H3>INFORMACIÓN DE PERFIL SIMPLE</H3>
+        <p>
+            "Hola, mi nombre es {{ nombre }}, tengo {{ edad }} años y vivo en {{ ciudad }}"
+        </p>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                nombre: "Ana García",
+                edad: 30,
+                ciudad: "Tupungato"
+            },
+        })
+    </script>
 </body>
+
 </html>
