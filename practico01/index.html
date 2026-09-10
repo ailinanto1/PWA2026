@@ -8,19 +8,180 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>TP1</title>
 </head>
+<style>
+    /* Estilos generales */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7f9;
+        color: #333333;
+        line-height: 1.6;
+        padding: 30px 20px;
+    }
+
+    #app {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 35px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Encabezados y Párrafos generales */
+    h3 {
+        color: #2c3e50;
+        font-size: 1.15rem;
+        margin-top: 25px;
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+        border-bottom: 2px solid #eef2f5;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    #app>h3:first-of-type {
+        margin-top: 0;
+    }
+
+    p {
+        color: #555555;
+        font-size: 0.98rem;
+    }
+
+    /* Botones e Inputs */
+    button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        margin-right: 8px;
+        margin-top: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    button:hover {
+        background-color: #2980b9;
+    }
+
+    button:active {
+        transform: scale(0.98);
+    }
+
+    input[type="text"] {
+        padding: 8px 12px;
+        border: 1px solid #cccccc;
+        border-radius: 6px;
+        width: calc(100% - 140px);
+        max-width: 320px;
+        margin-right: 8px;
+        outline: none;
+    }
+
+    input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: #3498db;
+    }
+
+    /* 1. TAREAS */
+    .item-tarea {
+        background-color: #fafbfc;
+        padding: 8px 12px;
+        border-radius: 6px;
+        margin-bottom: 6px;
+        border: 1px solid #eef2f5;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* 2. EVENTOS (En tarjetas separadas e independientes) */
+    .card-evento {
+        background-color: #f8fafc;
+        padding: 10px 14px;
+        border-left: 4px solid #3498db;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-evento p {
+        color: #475569;
+        font-family: monospace;
+        font-size: 0.88rem;
+        font-weight: bold;
+    }
+
+    /* 3. POSTS */
+    .card-post {
+        background-color: #ffffff;
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card-post:hover {
+        background-color: #f0f7fc;
+        border-color: #3498db;
+    }
+
+    .card-post strong {
+        color: #1e293b;
+        font-size: 0.95rem;
+        cursor: pointer;
+    }
+
+    /* 4. COMENTARIOS */
+    .contenedor-comentarios {
+        margin-top: 25px;
+        background-color: #f8fafc;
+        padding: 18px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .card-comentario {
+        background-color: #ffffff;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        border-left: 3px solid #3498db;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+
+    .card-comentario strong {
+        color: #334155;
+        font-size: 0.9rem;
+        display: block;
+    }
+</style>
 
 <body>
     <div id="app">
-        <H3>INFORMACIÓN DE PERFIL SIMPLE</H3>
+        <h3>INFORMACIÓN DE PERFIL SIMPLE</h3>
         <p>"Hola, mi nombre es {{ nombre }}, tengo {{ edad }} años y vivo en {{ ciudad }}"</p>
         <br>
         <h3>CONTADOR</h3>
         <p>{{ contador }}</p>
-        <button @click="incrementar">INCREMENTAR</button>
         <button @click="decrementar">DECREMENTAR</button>
+        <button @click="incrementar">INCREMENTAR</button>
         <br>
         <h3>LISTA DE TAREAS CON CONTEO Y ESTADO</h3>
-        <div v-for="tarea in tareas" :key="tarea.id">
+        <div class="item-tarea" v-for="tarea in tareas" :key="tarea.id">
             <input type="checkbox" v-model="tarea.completada">
             {{ tarea.texto }}
         </div>
@@ -34,19 +195,19 @@
         <p>Tenes {{ tareasPendientes }} tareas pendientes </p>
         <br>
         <h3>LISTA DE EVENTOS</h3>
-        <div v-for="evento in listaEventos" :key="'event-' + evento.id">
+        <div class="card-evento" v-for="evento in listaEventos" :key="'event-' + evento.id">
             <p>ID: {{ evento.id }} - NOMBRE: {{ evento.nombre }} - MILISENGUNDOS: {{ evento.timestamp }} ms</p>
         </div>
         <br>
         <h3>PRIMEROS 10 POSTS</h3>
         <p>Hace click en algun post para ver sus comentarios</p>
-        <div v-for="post in posts" :key="'post-' +post.id" @click="obtenerComments(post.id)">
+        <div class="card-post" v-for="post in posts" :key="'post-' + post.id" @click="obtenerComments(post.id)">
             <strong>{{ post.title }}</strong>
         </div>
-        <div v-if="comments.length > 0">
+        <div class="contenedor-comentarios" v-if="comments.length > 0">
             <h3>COMENTARIOS DEL POST SELECCIONADO</h3>
-            <div v-for="comment in comments" :key="'comment--' +comment.id">
-                <strong>{{ comment.email }} - {{ comment.body}}</strong>
+            <div class="card-comentario" v-for="comment in comments" :key="'comment--' + comment.id">
+                <strong>{{ comment.email }} - {{ comment.body }}</strong>
             </div>
         </div>
     </div>
