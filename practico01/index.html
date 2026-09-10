@@ -24,7 +24,6 @@
             {{ tarea.texto }}
         </div>
         <input type="text" v-model="nuevaTarea" @keyup.enter="agregarTarea" placeholder="Escribí una tarea...">
-        <!--VER PORQUE NO ME FUNCIONA-->
         <button @click="agregarTarea">AÑADIR TAREA</button>
         <br>
         <h3>TAREAS TOTALES</h3>
@@ -32,6 +31,11 @@
         <br>
         <h3>TAREAS PENDIENTES</h3>
         <p>Tenes {{ tareasPendientes }} tareas pendientes </p>
+        <br>
+        <h3>LISTA DE EVENTOS</h3>
+        <div v-for="evento in listaEventos" :key evento.id>
+            <p>ID: {{ evento.id }} - NOMBRE: {{ evento.nombre }} - MILISENGUNDOS: {{ evento.timestamp }} ms</p>
+        </div>
     </div>
     <script>
         var app = new Vue({
@@ -49,7 +53,8 @@
                     {id: 4, texto: 'Consumir API con axios', completada: false},
                     {id: 5, texto: 'Configurar contenedor de Docker', completada: false},
                     {id: 6, texto: 'Diseñar una base de datos', completada: false},
-                ]
+                ],
+                listaEventos: []
             },
             methods: {
                 incrementar() {
@@ -80,9 +85,32 @@
                 totalTareas(){
                     return this.tareas.length
                 }
-            }
+            },
+            beforeCreate() {
+                //En este momento los datos de la app todavia no fueron inicializados
+            },
+            created() {
+                this.listaEventos.push({ id: 1, nombre: 'created', timestamp: Date.now()})
+            },
+            beforeMount() {
+                this.listaEventos.push({ id: 2, nombre: 'beforeMount', timestamp: Date.now()})
+            },
+            mounted() {
+                this.listaEventos.push({ id: 3, nombre: 'mounted', timestamp: Date.now()})
+            },
+            beforeUpdate() {
+                this.listaEventos.push({ id:4, nombre: 'beforeUpdate', timestamp: Date.now()})
+            },
+            update() {
+                this.listaEventos.push({ id: 5, nombre: 'update', timestamp: Date.now()})
+            },
+            beforeDestroy() {
+                this.listaEventos.push({ id: 6, nombre: 'beforeDestroy', timestamp: Date.now()})
+            },
+            destroy() {
+                this.listaEventos.push({ id: 7, nombre: 'destroy', timestamp: Date.now()})
+            },
         })
     </script>
 </body>
-
 </html>
