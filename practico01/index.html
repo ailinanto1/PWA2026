@@ -34,17 +34,21 @@
         <p>Tenes {{ tareasPendientes }} tareas pendientes </p>
         <br>
         <h3>LISTA DE EVENTOS</h3>
-        <div v-for="evento in listaEventos" :key evento.id>
+        <div v-for="evento in listaEventos" :key="'event-' + evento.id">
             <p>ID: {{ evento.id }} - NOMBRE: {{ evento.nombre }} - MILISENGUNDOS: {{ evento.timestamp }} ms</p>
         </div>
         <br>
-        <h3>POST Y COMENTARIOS</h3>
-        <button @click="obtenerPost(1)">Cargar Post</button>
-        <button @click="obtenerComments(1)">Cargar Comentarios</button>
-        <h4>Detalle del Post</h4>
-        <pre>{{ post }}</pre>
-        <h4>Lista de Comentarios</h4>
-        <pre>{{ comments }}</pre>
+        <h3>PRIMEROS 10 POSTS</h3>
+        <p>Hace click en algun post para ver sus comentarios</p>
+        <div v-for="post in posts" :key="'post-' +post.id" @click="obtenerComments(post.id)">
+            <strong>{{ post.title }}</strong>
+        </div>
+        <div v-if="comments.length > 0">
+            <h3>COMENTARIOS DEL POST SELECCIONADO</h3>
+            <div v-for="comment in comments" :key="'comment--' +comment.id">
+                <strong>{{ comment.email }} - {{ comment.body}}</strong>
+            </div>
+        </div>
     </div>
     <script>
         var app = new Vue({
@@ -64,8 +68,9 @@
                     { id: 6, texto: 'Diseñar una base de datos', completada: false },
                 ],
                 listaEventos: [],
-                post: null,
-                comments: []
+                posts: [],
+                comments: [],
+
             },
             methods: {
                 incrementar() {
@@ -85,7 +90,6 @@
                 obtenerPost(postId) {
                     return axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`)
                         .then(response => {
-                            this.post = response.data;
                             return response.data;
                         })
                         .catch(error => {
@@ -128,18 +132,28 @@
             },
             mounted() {
                 this.listaEventos.push({ id: 3, nombre: 'mounted', timestamp: Date.now() })
+                for (let i = 1; i <= 10; i++) {
+                    this.obtenerPost(i).then(postObtenido => {
+                        this.posts.push(postObtenido)
+                    })
+                }
             },
             beforeUpdate() {
-                this.listaEventos.push({ id: 4, nombre: 'beforeUpdate', timestamp: Date.now() })
+                // Esto lo hago para que no me genere un buvle infinito y no me rompa el codigo
+                if (!this.listaEventos.some(e => e.nombre === 'beforeUpdate')) {
+                    this.listaEventos.push({ id: 4, nombre: 'beforeUpdate', timestamp: Date.now() })
+                }
             },
-            update() {
-                this.listaEventos.push({ id: 5, nombre: 'update', timestamp: Date.now() })
+            updated() {
+                if (!this.listaEventos.some(e => e.nombre === 'updated')) {
+                    this.listaEventos.push({ id: 5, nombre: 'updated', timestamp: Date.now() })
+                }
             },
             beforeDestroy() {
                 this.listaEventos.push({ id: 6, nombre: 'beforeDestroy', timestamp: Date.now() })
             },
-            destroy() {
-                this.listaEventos.push({ id: 7, nombre: 'destroy', timestamp: Date.now() })
+            destroyed() {
+                this.listaEventos.push({ id: 7, nombre: 'destroyed', timestamp: Date.now() })
             }
         })
     </script>
