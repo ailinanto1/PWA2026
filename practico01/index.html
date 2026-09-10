@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>TP1</title>
 </head>
+
 <body>
     <div id="app">
         <H3>INFORMACIÓN DE PERFIL SIMPLE</H3>
@@ -36,6 +37,14 @@
         <div v-for="evento in listaEventos" :key evento.id>
             <p>ID: {{ evento.id }} - NOMBRE: {{ evento.nombre }} - MILISENGUNDOS: {{ evento.timestamp }} ms</p>
         </div>
+        <br>
+        <h3>POST Y COMENTARIOS</h3>
+        <button @click="obtenerPost(1)">Cargar Post</button>
+        <button @click="obtenerComments(1)">Cargar Comentarios</button>
+        <h4>Detalle del Post</h4>
+        <pre>{{ post }}</pre>
+        <h4>Lista de Comentarios</h4>
+        <pre>{{ comments }}</pre>
     </div>
     <script>
         var app = new Vue({
@@ -47,14 +56,16 @@
                 contador: 0,
                 nuevaTarea: '',
                 tareas: [
-                    {id: 1, texto: 'Entregar el primer trabajo práctico', completada: false},
-                    {id: 2, texto: 'Aprender Django', completada: false},
-                    {id: 3, texto: 'Instalar Vuetify en el proyecto', completada: false},
-                    {id: 4, texto: 'Consumir API con axios', completada: false},
-                    {id: 5, texto: 'Configurar contenedor de Docker', completada: false},
-                    {id: 6, texto: 'Diseñar una base de datos', completada: false},
+                    { id: 1, texto: 'Entregar el primer trabajo práctico', completada: false },
+                    { id: 2, texto: 'Aprender Django', completada: false },
+                    { id: 3, texto: 'Instalar Vuetify en el proyecto', completada: false },
+                    { id: 4, texto: 'Consumir API con axios', completada: false },
+                    { id: 5, texto: 'Configurar contenedor de Docker', completada: false },
+                    { id: 6, texto: 'Diseñar una base de datos', completada: false },
                 ],
-                listaEventos: []
+                listaEventos: [],
+                post: null,
+                comments: []
             },
             methods: {
                 incrementar() {
@@ -70,6 +81,26 @@
                         completada: false
                     })
                     this.nuevaTarea = '';
+                },
+                obtenerPost(postId) {
+                    return axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+                        .then(response => {
+                            this.post = response.data;
+                            return response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error al traer el post:', error);
+                        });
+                },
+                obtenerComments(postId) {
+                    return axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
+                        .then(response => {
+                            this.comments = response.data;
+                            return response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error al traer los comentarios:', error);
+                        });
                 }
             },
             computed: {
@@ -82,7 +113,7 @@
                     }
                     return total
                 },
-                totalTareas(){
+                totalTareas() {
                     return this.tareas.length
                 }
             },
@@ -90,27 +121,28 @@
                 //En este momento los datos de la app todavia no fueron inicializados
             },
             created() {
-                this.listaEventos.push({ id: 1, nombre: 'created', timestamp: Date.now()})
+                this.listaEventos.push({ id: 1, nombre: 'created', timestamp: Date.now() })
             },
             beforeMount() {
-                this.listaEventos.push({ id: 2, nombre: 'beforeMount', timestamp: Date.now()})
+                this.listaEventos.push({ id: 2, nombre: 'beforeMount', timestamp: Date.now() })
             },
             mounted() {
-                this.listaEventos.push({ id: 3, nombre: 'mounted', timestamp: Date.now()})
+                this.listaEventos.push({ id: 3, nombre: 'mounted', timestamp: Date.now() })
             },
             beforeUpdate() {
-                this.listaEventos.push({ id:4, nombre: 'beforeUpdate', timestamp: Date.now()})
+                this.listaEventos.push({ id: 4, nombre: 'beforeUpdate', timestamp: Date.now() })
             },
             update() {
-                this.listaEventos.push({ id: 5, nombre: 'update', timestamp: Date.now()})
+                this.listaEventos.push({ id: 5, nombre: 'update', timestamp: Date.now() })
             },
             beforeDestroy() {
-                this.listaEventos.push({ id: 6, nombre: 'beforeDestroy', timestamp: Date.now()})
+                this.listaEventos.push({ id: 6, nombre: 'beforeDestroy', timestamp: Date.now() })
             },
             destroy() {
-                this.listaEventos.push({ id: 7, nombre: 'destroy', timestamp: Date.now()})
-            },
+                this.listaEventos.push({ id: 7, nombre: 'destroy', timestamp: Date.now() })
+            }
         })
     </script>
 </body>
+
 </html>
