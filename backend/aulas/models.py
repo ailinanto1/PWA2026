@@ -32,3 +32,21 @@ class Aula(models.Model):
 
     def __str__(self):
         return f"{self.descripcion} {self.ubicacion}"
+
+class Reserva_aula(models.Model):
+    id_aula = models.ForeignKey(Aula, on_delete=models.CASCADE, db_column='id_aula')
+    fh_desde = models.DateTimeField()
+    fh_hasta = models.DateTimeField()
+    observacion = models.TextField(max_length=256)
+
+    def __str__(self):
+        return f"{self.id_aula} {self.observacion}"
+
+class Horario_materia(models.Model):
+    id_materia = models.ForeignKey(Materia, on_delete=models.CASCADE, db_column='id_materia')
+    id_reserva = models.ForeignKey(Reserva_aula, on_delete=models.CASCADE, db_column='id_reserva')
+    fh_desde = models.DateTimeField()
+    fh_hasta = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.id_materia} {self.id_reserva}"
